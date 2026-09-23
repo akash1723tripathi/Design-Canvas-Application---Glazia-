@@ -5,8 +5,9 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
-// TODO: Lock cors origin to a specific domain before production deploy
-app.use(cors());
+// In production, ALLOWED_ORIGIN will be set to the deployed Vercel URL
+const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));

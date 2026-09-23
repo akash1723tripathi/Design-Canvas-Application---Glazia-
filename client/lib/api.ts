@@ -1,7 +1,6 @@
 import { Canvas, CanvasElement } from '../types/element';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/canvases';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
