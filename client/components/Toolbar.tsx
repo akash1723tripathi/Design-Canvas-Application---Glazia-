@@ -12,6 +12,8 @@ import {
   Sun,
   Moon,
   Download,
+  Undo2,
+  Redo2,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeProvider';
 import { ElementType, Canvas } from '../types/element';
@@ -29,6 +31,10 @@ interface ToolbarProps {
   onNewCanvas: () => void;
   isSaving?: boolean;
   autosaveStatus?: 'saving' | 'saved' | null;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -44,6 +50,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onNewCanvas,
   isSaving,
   autosaveStatus,
+  onUndo,
+  onRedo,
+  canUndo = false,
+  canRedo = false,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [showLoadDropdown, setShowLoadDropdown] = useState(false);
@@ -90,6 +100,31 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           </span>
         )}
       </div>
+
+      {/* Divider */}
+      <div className="w-px h-6 bg-border mx-1.5 shrink-0" />
+
+      {/* Undo / Redo */}
+      <button
+        onClick={onUndo}
+        disabled={!canUndo}
+        className={btnBase}
+        title="Undo (Ctrl+Z)"
+        aria-label="Undo"
+      >
+        <Undo2 size={14} />
+        <span className="hidden sm:inline">Undo</span>
+      </button>
+      <button
+        onClick={onRedo}
+        disabled={!canRedo}
+        className={btnBase}
+        title="Redo (Ctrl+Shift+Z)"
+        aria-label="Redo"
+      >
+        <Redo2 size={14} />
+        <span className="hidden sm:inline">Redo</span>
+      </button>
 
       {/* Divider */}
       <div className="w-px h-6 bg-border mx-1.5 shrink-0" />

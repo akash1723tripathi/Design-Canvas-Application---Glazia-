@@ -225,6 +225,10 @@ export default function Page() {
         onNewCanvas={resetCanvas}
         isSaving={isSaving}
         autosaveStatus={autosaveStatus}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={canUndo}
+        canRedo={canRedo}
       />
 
       {statusMessage && (
