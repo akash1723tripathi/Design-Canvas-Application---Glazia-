@@ -1,0 +1,7 @@
+node_modules/
+.env
+.env.*
+.claude
+.agents
+GEMINI.md 
+CLAUDE.md
