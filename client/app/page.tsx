@@ -76,11 +76,9 @@ export default function Page() {
   }, [undo, redo]);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [autosaveStatus, setAutosaveStatus] = useState<'saving' | 'saved' | null>(null);
 
   const prevCanvasIdRef = useRef<string | null>(currentCanvasId);
   const isInitialMount = useRef(true);
-  const savedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showStatus = (text: string, type: 'success' | 'error') => {
     setStatusMessage({ text, type });
@@ -98,14 +96,12 @@ export default function Page() {
           elements,
         });
         showStatus('Canvas updated successfully!', 'success');
-        setAutosaveStatus('saved');
       } else {
         const saved = await createCanvas(canvasName, elements);
         if (saved && saved._id) {
           setCurrentCanvasId(saved._id);
         }
         showStatus('Canvas created and saved successfully!', 'success');
-        setAutosaveStatus('saved');
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to save canvas';
@@ -117,23 +113,14 @@ export default function Page() {
 
   const performAutosave = async () => {
     if (!currentCanvasId) return;
-    if (savedTimeoutRef.current) {
-      clearTimeout(savedTimeoutRef.current);
-    }
-    setAutosaveStatus('saving');
     try {
       await updateCanvas(currentCanvasId, {
         name: canvasName,
         elements,
       });
-      setAutosaveStatus('saved');
       showStatus('Canvas auto-saved!', 'success');
-      savedTimeoutRef.current = setTimeout(() => {
-        setAutosaveStatus(null);
-      }, 3000);
     } catch (err) {
       console.error('Autosave failed:', err);
-      setAutosaveStatus(null);
       const msg = err instanceof Error ? err.message : 'Autosave failed';
       showStatus(msg, 'error');
     }
@@ -150,12 +137,10 @@ export default function Page() {
 
     if (prevCanvasIdRef.current !== currentCanvasId) {
       prevCanvasIdRef.current = currentCanvasId;
-      setAutosaveStatus(null);
       return;
     }
 
     if (currentCanvasId) {
-      setAutosaveStatus(null);
       debouncedAutosave();
     }
   }, [elements, canvasName, currentCanvasId]);
@@ -224,7 +209,6 @@ export default function Page() {
         onSelectCanvasToLoad={handleSelectCanvasToLoad}
         onNewCanvas={resetCanvas}
         isSaving={isSaving}
-        autosaveStatus={autosaveStatus}
         onUndo={undo}
         onRedo={redo}
         canUndo={canUndo}

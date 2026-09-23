@@ -28,6 +28,7 @@ interface ToolbarProps {
   onExportPNG: () => void;
   onLoadList: () => Promise<Canvas[]>;
   onSelectCanvasToLoad: (id: string) => void;
+  onDeleteCanvas?: (id: string) => Promise<void>;
   onNewCanvas: () => void;
   isSaving?: boolean;
   autosaveStatus?: 'saving' | 'saved' | null;
@@ -47,6 +48,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onExportPNG,
   onLoadList,
   onSelectCanvasToLoad,
+  onDeleteCanvas,
   onNewCanvas,
   isSaving,
   autosaveStatus,
@@ -59,6 +61,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [showLoadDropdown, setShowLoadDropdown] = useState(false);
   const [savedCanvases, setSavedCanvases] = useState<Canvas[]>([]);
   const [loadingList, setLoadingList] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleOpenLoad = async () => {
     if (!showLoadDropdown) {
@@ -80,6 +83,21 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     setShowLoadDropdown(false);
   };
 
+  const handleDeleteCanvas = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setDeletingId(id);
+    try {
+      if (onDeleteCanvas) {
+        await onDeleteCanvas(id);
+      }
+      setSavedCanvases((prev) => prev.filter((c) => c._id !== id));
+    } catch (err) {
+      console.error('Failed to delete canvas', err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const btnBase =
     'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-transparent text-primary text-xs font-medium cursor-pointer whitespace-nowrap transition-colors duration-150 hover:bg-accent/10 hover:text-accent disabled:opacity-35 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-secondary';
 
@@ -94,11 +112,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           placeholder="Canvas Name"
           className="px-2.5 py-1.5 rounded-md border border-border bg-input text-primary text-sm font-semibold w-40 outline-none transition-colors duration-150 focus:border-accent"
         />
-        {autosaveStatus && (
-          <span className="text-xs text-secondary font-normal whitespace-nowrap">
-            {autosaveStatus === 'saving' ? 'Saving...' : 'All changes saved'}
-          </span>
-        )}
       </div>
 
       {/* Divider */}
@@ -192,9 +205,23 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 <div
                   key={c._id}
                   onClick={() => c._id && handleSelectCanvas(c._id)}
-                  className="px-3 py-2 text-[13px] text-primary cursor-pointer rounded-md transition-colors duration-100 hover:bg-dropdown-hover"
+                  className="group flex items-center justify-between gap-1.5 px-2.5 py-1.5 text-[13px] text-primary cursor-pointer rounded-lg transition-colors duration-150 hover:bg-dropdown-hover"
                 >
-                  {c.name || 'Untitled Canvas'}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <button
+                      type="button"
+                      onClick={(e) => c._id && handleDeleteCanvas(e, c._id)}
+                      disabled={deletingId === c._id}
+                      className="p-1 text-secondary/60 hover:text-danger rounded-md hover:bg-danger/10 transition-colors duration-150 shrink-0 cursor-pointer disabled:opacity-50"
+                      title="Delete canvas"
+                      aria-label={`Delete ${c.name || 'canvas'}`}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                    <span className="truncate font-medium">
+                      {c.name || 'Untitled Canvas'}
+                    </span>
+                  </div>
                 </div>
               ))
             )}
