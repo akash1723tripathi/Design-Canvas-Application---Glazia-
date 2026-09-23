@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 import { useCanvasState } from '../hooks/useCanvasState';
 import { useDebouncedCallback } from '../hooks/useDebouncedCallback';
 import { Toolbar } from '../components/Toolbar';
@@ -191,14 +192,20 @@ export default function Page() {
       />
 
       {statusMessage && (
-        <div
-          className={`px-4 py-2 text-[13px] font-medium border-b border-border transition-colors duration-200 ${
-            statusMessage.type === 'success'
-              ? 'bg-success-bg text-success-text'
-              : 'bg-error-bg text-error-text'
-          }`}
-        >
-          {statusMessage.text}
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-border bg-panel text-primary shadow-xl text-xs font-medium transition-all duration-200 max-w-xs sm:max-w-sm">
+          {statusMessage.type === 'success' ? (
+            <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+          ) : (
+            <AlertCircle size={16} className="text-rose-500 shrink-0" />
+          )}
+          <span className="flex-1">{statusMessage.text}</span>
+          <button
+            onClick={() => setStatusMessage(null)}
+            className="text-secondary hover:text-primary p-0.5 rounded-md hover:bg-accent/10 transition-colors cursor-pointer"
+            aria-label="Close notification"
+          >
+            <X size={14} />
+          </button>
         </div>
       )}
 
