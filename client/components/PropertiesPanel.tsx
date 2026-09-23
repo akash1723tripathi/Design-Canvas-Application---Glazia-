@@ -14,16 +14,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedElement) {
     return (
-      <div
-        style={{
-          width: '260px',
-          padding: '16px',
-          backgroundColor: '#ffffff',
-          borderLeft: '1px solid #e2e8f0',
-          fontSize: '14px',
-          color: '#64748b',
-        }}
-      >
+      <div className="w-[260px] p-4 bg-panel border-l border-border flex items-center justify-center text-[13px] text-secondary transition-colors duration-200">
         No element selected
       </div>
     );
@@ -40,126 +31,144 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     }
   };
 
+  const inputClass =
+    'px-2 py-1.5 rounded-md border border-border bg-input text-primary text-[13px] w-full outline-none transition-colors duration-150 focus:border-accent font-[inherit]';
+
   return (
-    <div
-      style={{
-        width: '260px',
-        padding: '16px',
-        backgroundColor: '#ffffff',
-        borderLeft: '1px solid #e2e8f0',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
-        fontSize: '14px',
-      }}
-    >
-      <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#1e293b' }}>
-        Properties ({selectedElement.type.toUpperCase()})
-      </h3>
-
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>X</label>
-        <input
-          type="number"
-          value={selectedElement.x}
-          onChange={(e) => handleNumberChange('x', e.target.value)}
-          style={inputStyle}
-        />
+    <div className="w-[260px] p-4 bg-panel border-l border-border flex flex-col text-[13px] overflow-y-auto transition-colors duration-200">
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="font-semibold text-primary text-[13px]">Properties</span>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-accent/12 text-accent text-[11px] font-semibold uppercase tracking-wide">
+          {selectedElement.type}
+        </span>
       </div>
 
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>Y</label>
-        <input
-          type="number"
-          value={selectedElement.y}
-          onChange={(e) => handleNumberChange('y', e.target.value)}
-          style={inputStyle}
-        />
-      </div>
+      {/* Position */}
+      <Section label="Position">
+        <div className="grid grid-cols-2 gap-2">
+          <Field label="X">
+            <input
+              type="number"
+              value={selectedElement.x}
+              onChange={(e) => handleNumberChange('x', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Y">
+            <input
+              type="number"
+              value={selectedElement.y}
+              onChange={(e) => handleNumberChange('y', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+        </div>
+      </Section>
 
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>Width</label>
-        <input
-          type="number"
-          value={selectedElement.width ?? 100}
-          onChange={(e) => handleNumberChange('width', e.target.value)}
-          style={inputStyle}
-        />
-      </div>
+      {/* Size */}
+      <Section label="Size">
+        <div className="grid grid-cols-2 gap-2">
+          <Field label="W">
+            <input
+              type="number"
+              value={selectedElement.width ?? 100}
+              onChange={(e) => handleNumberChange('width', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+          <Field label="H">
+            <input
+              type="number"
+              value={selectedElement.height ?? 100}
+              onChange={(e) => handleNumberChange('height', e.target.value)}
+              className={inputClass}
+            />
+          </Field>
+        </div>
+      </Section>
 
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>Height</label>
-        <input
-          type="number"
-          value={selectedElement.height ?? 100}
-          onChange={(e) => handleNumberChange('height', e.target.value)}
-          style={inputStyle}
-        />
-      </div>
+      {/* Rotation */}
+      <Section label="Rotation">
+        <Field label="°">
+          <input
+            type="number"
+            value={selectedElement.rotation ?? 0}
+            onChange={(e) => handleNumberChange('rotation', e.target.value)}
+            className={inputClass}
+          />
+        </Field>
+      </Section>
 
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>Rotation (°)</label>
-        <input
-          type="number"
-          value={selectedElement.rotation ?? 0}
-          onChange={(e) => handleNumberChange('rotation', e.target.value)}
-          style={inputStyle}
-        />
-      </div>
+      {/* Fill */}
+      <Section label="Fill">
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            value={selectedElement.fill || '#000000'}
+            onChange={(e) => handleChange('fill', e.target.value)}
+            className="color-swatch w-8 h-8 rounded-md border border-border cursor-pointer p-0 shrink-0 appearance-none"
+          />
+          <input
+            type="text"
+            value={selectedElement.fill || '#000000'}
+            onChange={(e) => handleChange('fill', e.target.value)}
+            className={`${inputClass} flex-1`}
+          />
+        </div>
+      </Section>
 
-      <div style={fieldGroupStyle}>
-        <label style={labelStyle}>Fill Color</label>
-        <input
-          type="color"
-          value={selectedElement.fill || '#000000'}
-          onChange={(e) => handleChange('fill', e.target.value)}
-          style={{ ...inputStyle, padding: '2px', height: '36px', cursor: 'pointer' }}
-        />
-      </div>
-
+      {/* Text (conditional) */}
       {selectedElement.type === 'text' && (
-        <>
-          <div style={fieldGroupStyle}>
-            <label style={labelStyle}>Text Content</label>
+        <Section label="Text">
+          <Field label="Content">
             <input
               type="text"
               value={selectedElement.text ?? ''}
               onChange={(e) => handleChange('text', e.target.value)}
-              style={inputStyle}
+              className={inputClass}
             />
-          </div>
-          <div style={fieldGroupStyle}>
-            <label style={labelStyle}>Font Size</label>
+          </Field>
+          <Field label="Font Size" className="mt-2">
             <input
               type="number"
               value={selectedElement.fontSize ?? 20}
               onChange={(e) => handleNumberChange('fontSize', e.target.value)}
-              style={inputStyle}
+              className={inputClass}
             />
-          </div>
-        </>
+          </Field>
+        </Section>
       )}
     </div>
   );
 };
 
-const fieldGroupStyle: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '4px',
-};
+/* ── Sub-components ───────────────────────────────────────────────── */
 
-const labelStyle: React.CSSProperties = {
-  fontSize: '12px',
-  fontWeight: 500,
-  color: '#64748b',
-};
+function Section({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="py-3 border-t border-border first:border-t-0 first:pt-0">
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-secondary mb-2">
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
 
-const inputStyle: React.CSSProperties = {
-  padding: '6px 8px',
-  borderRadius: '4px',
-  border: '1px solid #cbd5e1',
-  fontSize: '13px',
-  width: '100%',
-  boxSizing: 'border-box',
-};
+function Field({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      <div className="text-[11px] font-medium text-secondary mb-1">{label}</div>
+      {children}
+    </div>
+  );
+}

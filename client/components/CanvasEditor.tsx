@@ -77,14 +77,8 @@ export default function CanvasEditor({
   return (
     <div
       ref={containerRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        minHeight: '500px',
-        backgroundColor: '#f8fafc',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className="w-full h-full min-h-[500px] relative overflow-hidden transition-colors duration-200"
+      style={{ backgroundColor: 'var(--bg-canvas)' }}
     >
       <Stage
         width={dimensions.width}

@@ -95,17 +95,7 @@ export default function Page() {
     elements.find((el) => el.id === selectedId) || null;
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh',
-        width: '100vw',
-        overflow: 'hidden',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      }}
-    >
+    <div className="flex flex-col h-screen w-screen overflow-hidden">
       <Toolbar
         canvasName={canvasName}
         onCanvasNameChange={setCanvasName}
@@ -121,28 +111,18 @@ export default function Page() {
 
       {statusMessage && (
         <div
-          style={{
-            padding: '8px 16px',
-            fontSize: '13px',
-            backgroundColor:
-              statusMessage.type === 'success' ? '#dcfce7' : '#fee2e2',
-            color: statusMessage.type === 'success' ? '#15803d' : '#b91c1c',
-            borderBottom: '1px solid #e2e8f0',
-          }}
+          className={`px-4 py-2 text-[13px] font-medium border-b border-border transition-colors duration-200 ${
+            statusMessage.type === 'success'
+              ? 'bg-success-bg text-success-text'
+              : 'bg-error-bg text-error-text'
+          }`}
         >
           {statusMessage.text}
         </div>
       )}
 
-      <div
-        style={{
-          display: 'flex',
-          flex: 1,
-          height: 'calc(100vh - 60px)',
-          position: 'relative',
-        }}
-      >
-        <div style={{ flex: 1, height: '100%' }}>
+      <div className="flex flex-1 relative" style={{ height: 'calc(100vh - 56px)' }}>
+        <div className="flex-1 h-full">
           <CanvasEditor
             elements={elements}
             selectedId={selectedId}
