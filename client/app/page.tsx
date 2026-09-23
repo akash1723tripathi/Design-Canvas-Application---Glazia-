@@ -94,12 +94,15 @@ export default function Page() {
         elements,
       });
       setAutosaveStatus('saved');
+      showStatus('Canvas auto-saved!', 'success');
       savedTimeoutRef.current = setTimeout(() => {
         setAutosaveStatus(null);
       }, 3000);
     } catch (err) {
       console.error('Autosave failed:', err);
       setAutosaveStatus(null);
+      const msg = err instanceof Error ? err.message : 'Autosave failed';
+      showStatus(msg, 'error');
     }
   };
 
@@ -192,11 +195,11 @@ export default function Page() {
       />
 
       {statusMessage && (
-        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-border bg-panel text-primary shadow-xl text-xs font-medium transition-all duration-200 max-w-xs sm:max-w-sm">
+        <div className="fixed top-16 right-5 z-[9999] flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-panel text-primary shadow-2xl text-xs font-semibold transition-all duration-200 max-w-xs sm:max-w-sm">
           {statusMessage.type === 'success' ? (
-            <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+            <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
           ) : (
-            <AlertCircle size={16} className="text-rose-500 shrink-0" />
+            <AlertCircle size={18} className="text-rose-500 shrink-0" />
           )}
           <span className="flex-1">{statusMessage.text}</span>
           <button
