@@ -28,6 +28,7 @@ interface ToolbarProps {
   onSelectCanvasToLoad: (id: string) => void;
   onNewCanvas: () => void;
   isSaving?: boolean;
+  autosaveStatus?: 'saving' | 'saved' | null;
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -42,6 +43,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onSelectCanvasToLoad,
   onNewCanvas,
   isSaving,
+  autosaveStatus,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [showLoadDropdown, setShowLoadDropdown] = useState(false);
@@ -74,13 +76,20 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   return (
     <div className="flex items-center gap-1 px-3 py-2 bg-toolbar border-b border-border transition-colors duration-200">
       {/* Canvas name */}
-      <input
-        type="text"
-        value={canvasName}
-        onChange={(e) => onCanvasNameChange(e.target.value)}
-        placeholder="Canvas Name"
-        className="px-2.5 py-1.5 rounded-md border border-border bg-input text-primary text-sm font-semibold w-40 outline-none transition-colors duration-150 focus:border-accent"
-      />
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={canvasName}
+          onChange={(e) => onCanvasNameChange(e.target.value)}
+          placeholder="Canvas Name"
+          className="px-2.5 py-1.5 rounded-md border border-border bg-input text-primary text-sm font-semibold w-40 outline-none transition-colors duration-150 focus:border-accent"
+        />
+        {autosaveStatus && (
+          <span className="text-xs text-secondary font-normal whitespace-nowrap">
+            {autosaveStatus === 'saving' ? 'Saving...' : 'All changes saved'}
+          </span>
+        )}
+      </div>
 
       {/* Divider */}
       <div className="w-px h-6 bg-border mx-1.5 shrink-0" />
