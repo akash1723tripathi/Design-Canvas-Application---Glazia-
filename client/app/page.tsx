@@ -13,6 +13,7 @@ import {
   updateCanvas,
   listCanvases,
   getCanvas,
+  deleteCanvas,
 } from '../lib/api';
 
 const CanvasEditor = dynamic(() => import('../components/CanvasEditor'), {
@@ -186,6 +187,20 @@ export default function Page() {
     }
   };
 
+  const handleDeleteSavedCanvas = async (id: string) => {
+    try {
+      await deleteCanvas(id);
+      if (currentCanvasId === id) {
+        setCurrentCanvasId(null);
+      }
+      showStatus('Canvas deleted successfully', 'success');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to delete canvas';
+      showStatus(msg, 'error');
+      throw err;
+    }
+  };
+
   const handleDeleteSelected = () => {
     if (selectedId) {
       deleteElement(selectedId);
@@ -207,6 +222,7 @@ export default function Page() {
         onExportPNG={handleExportPNG}
         onLoadList={listCanvases}
         onSelectCanvasToLoad={handleSelectCanvasToLoad}
+        onDeleteCanvas={handleDeleteSavedCanvas}
         onNewCanvas={resetCanvas}
         isSaving={isSaving}
         onUndo={undo}

@@ -205,23 +205,21 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 <div
                   key={c._id}
                   onClick={() => c._id && handleSelectCanvas(c._id)}
-                  className="group flex items-center justify-between gap-1.5 px-2.5 py-1.5 text-[13px] text-primary cursor-pointer rounded-lg transition-colors duration-150 hover:bg-dropdown-hover"
+                  className="group flex items-center justify-between gap-2 px-3 py-1.5 text-[13px] text-primary cursor-pointer rounded-lg transition-colors duration-150 hover:bg-dropdown-hover"
                 >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <button
-                      type="button"
-                      onClick={(e) => c._id && handleDeleteCanvas(e, c._id)}
-                      disabled={deletingId === c._id}
-                      className="p-1 text-secondary/60 hover:text-danger rounded-md hover:bg-danger/10 transition-colors duration-150 shrink-0 cursor-pointer disabled:opacity-50"
-                      title="Delete canvas"
-                      aria-label={`Delete ${c.name || 'canvas'}`}
-                    >
-                      <Trash2 size={13} />
-                    </button>
-                    <span className="truncate font-medium">
-                      {c.name || 'Untitled Canvas'}
-                    </span>
-                  </div>
+                  <span className="truncate font-medium flex-1">
+                    {c.name || 'Untitled Canvas'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => c._id && handleDeleteCanvas(e, c._id)}
+                    disabled={deletingId === c._id}
+                    className="p-1 text-secondary/60 hover:text-danger rounded-md hover:bg-danger/10 transition-colors duration-150 shrink-0 cursor-pointer disabled:opacity-50"
+                    title="Delete canvas"
+                    aria-label={`Delete ${c.name || 'canvas'}`}
+                  >
+                    <Trash2 size={13} />
+                  </button>
                 </div>
               ))
             )}
