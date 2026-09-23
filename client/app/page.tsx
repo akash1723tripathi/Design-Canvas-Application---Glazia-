@@ -195,7 +195,7 @@ export default function Page() {
       />
 
       {statusMessage && (
-        <div className="fixed top-16 right-5 z-[9999] flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-panel text-primary shadow-2xl text-xs font-semibold transition-all duration-200 max-w-xs sm:max-w-sm">
+        <div className="fixed bottom-5 right-5 z-[9999] flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-panel text-primary shadow-2xl text-xs font-semibold transition-all duration-200 max-w-xs sm:max-w-sm">
           {statusMessage.type === 'success' ? (
             <CheckCircle2 size={18} className="text-emerald-500 shrink-0" />
           ) : (
