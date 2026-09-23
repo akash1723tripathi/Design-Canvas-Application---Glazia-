@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useCanvasState } from '../hooks/useCanvasState';
 import { Toolbar } from '../components/Toolbar';
 import { PropertiesPanel } from '../components/PropertiesPanel';
+import type { CanvasEditorRef } from '../components/CanvasEditor';
 import {
   createCanvas,
   updateCanvas,
@@ -17,6 +18,8 @@ const CanvasEditor = dynamic(() => import('../components/CanvasEditor'), {
 });
 
 export default function Page() {
+  const canvasEditorRef = useRef<CanvasEditorRef>(null);
+
   const {
     elements,
     selectedId,
@@ -70,6 +73,32 @@ export default function Page() {
     }
   };
 
+  const handleExportPNG = () => {
+    if (!canvasEditorRef.current) return;
+    const dataUrl = canvasEditorRef.current.exportToPNG();
+    if (!dataUrl) return;
+
+    const arr = dataUrl.split(',');
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    const blob = new Blob([u8arr], { type: mime });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${canvasName || 'canvas'}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleSelectCanvasToLoad = async (id: string) => {
     try {
       const canvas = await getCanvas(id);
@@ -103,6 +132,7 @@ export default function Page() {
         onDeleteSelected={handleDeleteSelected}
         hasSelection={!!selectedId}
         onSave={handleSave}
+        onExportPNG={handleExportPNG}
         onLoadList={listCanvases}
         onSelectCanvasToLoad={handleSelectCanvasToLoad}
         onNewCanvas={resetCanvas}
@@ -124,6 +154,7 @@ export default function Page() {
       <div className="flex flex-1 relative" style={{ height: 'calc(100vh - 56px)' }}>
         <div className="flex-1 h-full">
           <CanvasEditor
+            ref={canvasEditorRef}
             elements={elements}
             selectedId={selectedId}
             onSelectElement={selectElement}

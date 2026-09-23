@@ -11,6 +11,7 @@ import {
   FilePlus,
   Sun,
   Moon,
+  Download,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeProvider';
 import { ElementType, Canvas } from '../types/element';
@@ -22,6 +23,7 @@ interface ToolbarProps {
   onDeleteSelected: () => void;
   hasSelection: boolean;
   onSave: () => void;
+  onExportPNG: () => void;
   onLoadList: () => Promise<Canvas[]>;
   onSelectCanvasToLoad: (id: string) => void;
   onNewCanvas: () => void;
@@ -35,6 +37,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onDeleteSelected,
   hasSelection,
   onSave,
+  onExportPNG,
   onLoadList,
   onSelectCanvasToLoad,
   onNewCanvas,
@@ -120,6 +123,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       >
         <Save size={14} />
         {isSaving ? 'Saving…' : 'Save'}
+      </button>
+
+      {/* Export PNG */}
+      <button onClick={onExportPNG} className={btnBase}>
+        <Download size={14} />
+        <span className="hidden sm:inline">Export PNG</span>
       </button>
 
       {/* Load */}
