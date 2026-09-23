@@ -14,7 +14,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedElement) {
     return (
-      <div className="w-[260px] p-4 bg-panel border-l border-border flex items-center justify-center text-[13px] text-secondary transition-colors duration-200">
+      <div className="w-[360px] p-4 bg-panel border-l border-border flex items-center justify-center text-[13px] text-secondary transition-colors duration-200">
         No element selected
       </div>
     );
@@ -35,7 +35,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     'px-2 py-1.5 rounded-md border border-border bg-input text-primary text-[13px] w-full outline-none transition-colors duration-150 focus:border-accent font-[inherit]';
 
   return (
-    <div className="w-[260px] p-4 bg-panel border-l border-border flex flex-col text-[13px] overflow-y-auto transition-colors duration-200">
+    <div className="w-[300px] p-4 bg-panel border-l border-border flex flex-col text-[13px] overflow-y-auto transition-colors duration-200">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <span className="font-semibold text-primary text-[13px]">Properties</span>
