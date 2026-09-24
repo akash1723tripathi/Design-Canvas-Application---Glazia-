@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Square,
   Circle,
@@ -62,20 +62,44 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [savedCanvases, setSavedCanvases] = useState<Canvas[]>([]);
   const [loadingList, setLoadingList] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleOpenLoad = async () => {
-    if (!showLoadDropdown) {
-      setLoadingList(true);
-      try {
-        const list = await onLoadList();
-        setSavedCanvases(list);
-      } catch (err) {
-        console.error('Failed to load canvas list', err);
-      } finally {
-        setLoadingList(false);
-      }
+  const fetchList = useCallback(async () => {
+    setLoadingList(true);
+    try {
+      const list = await onLoadList();
+      setSavedCanvases(list);
+    } catch (err) {
+      console.error('Failed to load canvas list', err);
+    } finally {
+      setLoadingList(false);
     }
-    setShowLoadDropdown((prev) => !prev);
+  }, [onLoadList]);
+
+  const openDropdown = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setShowLoadDropdown((prev) => {
+      if (!prev) fetchList();
+      return true;
+    });
+  }, [fetchList]);
+
+  const scheduleClose = useCallback(() => {
+    closeTimerRef.current = setTimeout(() => {
+      setShowLoadDropdown(false);
+    }, 150);
+  }, []);
+
+  const handleLoadButtonClick = () => {
+    // Toggle on click — touch-device fallback
+    if (showLoadDropdown) {
+      setShowLoadDropdown(false);
+    } else {
+      openDropdown();
+    }
   };
 
   const handleSelectCanvas = (id: string) => {
@@ -90,6 +114,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       if (onDeleteCanvas) {
         await onDeleteCanvas(id);
       }
+      // Refresh list in place — keep the dropdown open
       setSavedCanvases((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       console.error('Failed to delete canvas', err);
@@ -189,13 +214,25 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </button>
 
       {/* Load */}
-      <div className="relative">
-        <button onClick={handleOpenLoad} className={btnBase}>
+      <div
+        className="relative"
+        onMouseEnter={openDropdown}
+        onMouseLeave={scheduleClose}
+      >
+        <button
+          onClick={handleLoadButtonClick}
+          onMouseEnter={openDropdown}
+          className={btnBase}
+        >
           <FolderOpen size={14} />
           <span className="hidden sm:inline">Load</span>
         </button>
         {showLoadDropdown && (
-          <div className="absolute top-full left-0 mt-1.5 bg-panel border border-border rounded-xl shadow-lg z-50 min-w-[220px] max-h-[260px] overflow-y-auto p-1 transition-colors duration-200">
+          <div
+            className="absolute top-full left-0 mt-1.5 bg-panel border border-border rounded-xl shadow-lg z-50 min-w-[220px] max-h-[260px] overflow-y-auto p-1 transition-colors duration-200"
+            onMouseEnter={openDropdown}
+            onMouseLeave={scheduleClose}
+          >
             {loadingList ? (
               <div className="px-3 py-2 text-[13px] text-secondary">Loading…</div>
             ) : savedCanvases.length === 0 ? (
