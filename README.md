@@ -84,14 +84,27 @@ The application follows a client-server architecture. The frontend uses **React 
 | `PUT` | `/api/canvases/:id` | Update an existing canvas (name or elements) |
 | `DELETE` | `/api/canvases/:id` | Delete a specific canvas by ID |
 
+## Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| `Ctrl+Z` / `Cmd+Z` | Undo last action |
+| `Ctrl+Shift+Z` / `Ctrl+Y` | Redo |
+| `Delete` / `Backspace` | Delete the selected element |
+| `Arrow keys` | Nudge selected element by **1 px** |
+| `Shift + Arrow keys` | Nudge selected element by **10 px** |
+
+> Keyboard shortcuts are ignored when focus is inside a text input or the canvas name field.
+
 ## Known Limitations
-- No undo/redo functionality
 - No authentication or authorization (canvases are not user-scoped and anyone can edit)
-- No autosave (users must manually click 'Save')
 - The list view doesn't show a thumbnail preview of the canvases
 
 ## Bonus Features Implemented
-- None yet.
+- **Undo / Redo** — full history (up to 50 steps) with `Ctrl+Z` / `Ctrl+Shift+Z`
+- **Autosave** — changes to a previously saved canvas are automatically persisted after 2 seconds of inactivity
+- **Delete & Arrow-key nudge shortcuts** — keyboard-driven element manipulation without reaching for the mouse
+- **Hover-to-open Load dropdown** — the Load menu opens on mouse hover and closes automatically after selecting a canvas; deleting an entry refreshes the list in place without closing the menu; touch devices can still tap the Load button to toggle
 
 ## Live URL
 TBD
