@@ -106,5 +106,3 @@ The application follows a client-server architecture. The frontend uses **React 
 - **Delete & Arrow-key nudge shortcuts** — keyboard-driven element manipulation without reaching for the mouse
 - **Hover-to-open Load dropdown** — the Load menu opens on mouse hover and closes automatically after selecting a canvas; deleting an entry refreshes the list in place without closing the menu; touch devices can still tap the Load button to toggle
 
-## Live URL
-TBD
