@@ -69,12 +69,32 @@ export default function Page() {
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
         e.preventDefault();
         redo();
+      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedId) {
+          e.preventDefault();
+          deleteElement(selectedId);
+        }
+      } else if (
+        ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)
+      ) {
+        if (selectedId) {
+          e.preventDefault();
+          const step = e.shiftKey ? 10 : 1;
+          const el = elements.find((el) => el.id === selectedId);
+          if (!el) return;
+          const delta: { x?: number; y?: number } = {};
+          if (e.key === 'ArrowUp') delta.y = el.y - step;
+          else if (e.key === 'ArrowDown') delta.y = el.y + step;
+          else if (e.key === 'ArrowLeft') delta.x = el.x - step;
+          else if (e.key === 'ArrowRight') delta.x = el.x + step;
+          updateElement(selectedId, delta);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo]);
+  }, [undo, redo, selectedId, deleteElement, updateElement, elements]);
 
   const [isSaving, setIsSaving] = useState(false);
 
