@@ -2,6 +2,14 @@
 
 A simple, collaborative design canvas built with modern web technologies that allows users to create, view, edit, and save designs consisting of various shapes. 
 
+<img width="1916" height="1145" alt="image" src="https://github.com/user-attachments/assets/036717ff-944f-4666-ba40-a864ff205489" />
+
+
+
+
+
+
+
 ## Tech Stack
 - **Frontend:** Next.js, React, React Konva
 - **Backend:** Node.js, Express
