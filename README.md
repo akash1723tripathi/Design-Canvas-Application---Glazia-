@@ -1,14 +1,15 @@
 # Mini Design Canvas
 
-A simple, collaborative design canvas built with modern web technologies that allows users to create, view, edit, and save designs consisting of various shapes. 
+A simple, collaborative design canvas built with modern web technologies that allows users to create, view, edit, and save designs consisting of various shapes.
 
 <img width="1916" height="1145" alt="image" src="https://github.com/user-attachments/assets/036717ff-944f-4666-ba40-a864ff205489" />
 
+## Live Demo
 
+- **Frontend:** https://design-canvas-application.vercel.app
+- **Backend API:** https://design-canvas-application-glazia.onrender.com
 
-
-
-
+> Note: the backend is on Render's free tier, so the first request after inactivity may take 30-50 seconds to respond (cold start).
 
 ## Tech Stack
 - **Frontend:** Next.js, React, React Konva
@@ -23,13 +24,13 @@ A simple, collaborative design canvas built with modern web technologies that al
 
 ### Installation
 1. Clone the repository:
-   ```bash
+```bash
    git clone <repository-url>
    cd <repository-dir>
-   ```
+```
 
 2. Install dependencies for both client and server:
-   ```bash
+```bash
    # Terminal 1: Backend
    cd server
    npm install
@@ -37,7 +38,7 @@ A simple, collaborative design canvas built with modern web technologies that al
    # Terminal 2: Frontend
    cd client
    npm install
-   ```
+```
 
 ### Environment Variables
 
@@ -101,8 +102,11 @@ The application follows a client-server architecture. The frontend uses **React 
 - The list view doesn't show a thumbnail preview of the canvases
 
 ## Bonus Features Implemented
+- **PNG Export** — export the current canvas as a downloadable PNG image (selection handles are hidden during export so they don't appear in the image)
 - **Undo / Redo** — full history (up to 50 steps) with `Ctrl+Z` / `Ctrl+Shift+Z`
 - **Autosave** — changes to a previously saved canvas are automatically persisted after 2 seconds of inactivity
 - **Delete & Arrow-key nudge shortcuts** — keyboard-driven element manipulation without reaching for the mouse
 - **Hover-to-open Load dropdown** — the Load menu opens on mouse hover and closes automatically after selecting a canvas; deleting an entry refreshes the list in place without closing the menu; touch devices can still tap the Load button to toggle
 
+## Additional Polish
+- Dark/light theme toggle with system-preference detection and persistence
